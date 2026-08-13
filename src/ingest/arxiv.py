@@ -26,7 +26,7 @@ NS = {"atom": "http://www.w3.org/2005/Atom", "arxiv": "http://arxiv.org/schemas/
 # arXiv asks for a descriptive User-Agent and at least 3 seconds between requests.
 # Being impolite here gets the IP blocked, which would break the project for everyone
 # who clones it, not just this machine.
-HEADERS = {"User-Agent": "rag-degradation-benchmark/0.1 (research; contact via GitHub)"}
+HEADERS = {"User-Agent": "rag-degradation/0.1 (research; contact via GitHub)"}
 
 
 @dataclass

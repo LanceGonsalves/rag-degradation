@@ -1,4 +1,4 @@
-<h1 align="center">📄 RAG Degradation Benchmark</h1>
+<h1 align="center">📄 RAG Degradation</h1>
 
 <p align="center">
   <i>Retrieval-augmented systems are shipped constantly and measured rarely.<br>

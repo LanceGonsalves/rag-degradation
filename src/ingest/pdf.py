@@ -26,7 +26,7 @@ from pathlib import Path
 from src.config import load_config
 from src.ingest.clean import clean_pdf_text
 
-HEADERS = {"User-Agent": "rag-degradation-benchmark/0.1 (research; contact via GitHub)"}
+HEADERS = {"User-Agent": "rag-degradation/0.1 (research; contact via GitHub)"}
 
 
 @dataclass
