@@ -1,0 +1,49 @@
+name: CI
+
+# The corpus is fetched, not committed, and export.arxiv.org is not reachable from
+# every runner — so CI tests the logic that does not need it. That is deliberate:
+# chunking and parsing are where a silent bug would corrupt every later number.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  test:
+    name: Unit tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.11"
+          cache: pip
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+      - name: Run tests
+        run: python -m pytest -q
+      - name: Check every module imports
+        run: |
+          python - <<'PY'
+          import importlib, pkgutil, sys
+          failed = []
+          for info in pkgutil.walk_packages(["src"], prefix="src."):
+              try:
+                  importlib.import_module(info.name)
+                  print(f"  ok   {info.name}")
+              except Exception as exc:
+                  failed.append(info.name)
+                  print(f"  FAIL {info.name}: {type(exc).__name__}: {exc}")
+          if failed:
+              sys.exit(f"{len(failed)} module(s) failed to import")
+          PY
+      - name: Check the CLIs respond
+        run: |
+          python -m src.ingest.arxiv --help > /dev/null
+          python -m src.ingest.build_corpus --help > /dev/null
+          echo "CLIs OK"

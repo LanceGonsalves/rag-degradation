@@ -1,0 +1,18 @@
+# --- core ---
+pyyaml>=6.0
+pypdf>=4.0            # PDF text extraction (src/ingest/pdf.py)
+numpy>=1.24
+pandas>=2.0
+pytest>=8.0
+
+# --- retrieval (increment 2) ---
+# sentence-transformers>=3.0
+# rank-bm25>=0.2
+
+# --- evaluation / plotting (increment 4) ---
+# matplotlib>=3.7
+# scipy>=1.11
+
+# --- service (increment 8) ---
+# fastapi>=0.110
+# uvicorn>=0.29

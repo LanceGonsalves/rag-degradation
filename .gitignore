@@ -1,0 +1,21 @@
+# Fetched corpus — regenerate with `python -m src.ingest.arxiv`, never committed.
+data/raw/
+data/corpus/
+data/index/
+
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
+venv/
+*.egg-info/
+
+# macOS
+.DS_Store
+._*
+
+# Editors
+.vscode/
+.idea/
+*.swp

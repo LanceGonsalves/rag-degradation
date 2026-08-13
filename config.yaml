@@ -1,0 +1,48 @@
+# RAG Degradation Benchmark — central configuration.
+# Every script reads from here so runs stay comparable and reproducible.
+
+seed: 42
+
+paths:
+  raw_dir: data/raw                 # fetched arXiv metadata (gitignored)
+  corpus_dir: data/corpus           # chunked corpus (gitignored, regenerable)
+  index_dir: data/index             # retrieval indices (gitignored)
+  reports_dir: reports
+  figures_dir: reports/figures
+
+# --- corpus ------------------------------------------------------------------
+# Papers about how ML systems are evaluated. Chosen deliberately: this is a domain
+# Lance can write ground-truth questions for and *verify the answers to*, which is
+# what makes the eval set worth anything. A corpus you cannot check is decoration.
+corpus:
+  queries:
+    - 'abs:"data leakage" AND cat:cs.LG'
+    - 'abs:"train-test contamination" AND cat:cs.LG'
+    - 'abs:"benchmark contamination" AND cat:cs.CL'
+    - 'abs:"evaluation" AND abs:"reproducibility" AND cat:cs.LG'
+    - 'abs:"cross-validation" AND abs:"model selection" AND cat:stat.ML'
+  max_per_query: 100                # arXiv caps a single request at 2000; be polite
+  request_delay_seconds: 3.0        # arXiv asks for >=3s between requests
+  min_abstract_chars: 400           # skip stubs that would chunk into noise
+
+# --- chunking ----------------------------------------------------------------
+# Both are experimental variables later (finding: chunk size vs retrieval quality),
+# so they live here rather than being hard-coded at a call site.
+chunking:
+  strategy: sentence_window         # sentence_window | fixed
+  chunk_size: 1000                  # target characters per chunk
+  chunk_overlap: 200                # characters shared between neighbours
+  min_chunk_chars: 100              # discard fragments below this
+
+# --- retrieval ---------------------------------------------------------------
+retrieval:
+  embedding_model: sentence-transformers/all-MiniLM-L6-v2   # runs locally, no API
+  top_k: 5
+  hybrid_alpha: 0.5                 # 1.0 = dense only, 0.0 = BM25 only
+
+# --- evaluation --------------------------------------------------------------
+eval:
+  bootstrap_iterations: 1000
+  confidence_level: 0.95
+  contamination_rates: [0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.7, 1.0]
+  repeats_per_rate: 5
